@@ -2,8 +2,15 @@
 
 using namespace std;
 
-int calc(int a, int b, int d, double s)
+
+int main()
 {
+
+	//(-153/b + d-4*a)/(1 +a*b);
+	int a, b, d, x;
+	x = 0;
+	cout << "Enter a, b, d: ";
+	cin >> a >> b >> d;
 	_asm
 	{
 		mov eax, a
@@ -24,27 +31,21 @@ int calc(int a, int b, int d, double s)
 		mov eax, a
 		imul eax, -4; <edx:eax> = -4 * a
 		add eax, ecx; <eax> = -4 * a + d
-		mov ?, -153;
+		push eax; в стеке - 4 * a + d
+		mov eax, -153; <eax> = -153
+		cdq; расширяем регистр <eax>
+		idiv ebx; <eax> = -153 / b
+		pop ebx; <ebx> = -4 * a + d
+		add eax, ebx; -153 / b + d - 4 * a
+		pop ecx; <ecx> = a * b + 1
 		cdq
-		idiv ebx
-		add eax, ? 
-
-
-		
+		idiv ecx; <eax> = (-153 / b + d - 4 * a) / (a * b + 1)
+		mov x, eax
 
 	}
-
-}
-
-int main()
-{
-
-	//(-153/b + d-4*a)/(1 +a*b);
-	int a, b, d, s;
-	s = 0;
-	cin >> a >> b >> d;
-	calc(a, b, d, s);
-	cout << s;
+	
+	cout <<"asm: "<< x<< endl;
+	cout << "C++: " << (int)(-153 / b + d - 4 * a) / (a * b + 1);
 	return 0;
 
 
